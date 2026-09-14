@@ -50,7 +50,7 @@
 - 换端口：改 `http_port` 后重启；或临时用 `python mcp_service.py --port 9000` 覆盖。
 - 重置密钥：删除 `config.json` 后重启，会自动生成新 key。
 
-### 连接 CodeBuddy（二选一）
+### 连接 以CodeBuddy示例（二选一）
 
 **方式 A：stdio（推荐）** —— 在 CodeBuddy 的 MCP 设置中添加：
 
