@@ -116,7 +116,8 @@ stdio 模式下服务会随 CodeBuddy 自动启动，并同时开启 HTTP 接收
 
 > 使用例程前，把代码里的 `API_KEY` 占位符改成你自己的 key（见 `config.json` 或启动窗口输出）。
 
-`run_ui.bat` 启动 `ui_tester.py`：图形界面测试工具，可视化发送文字/图片、查看 AI 返回。
+附带的测试工具：
+双击`run_ui.bat` 启动 `ui_tester.py`：图形界面测试工具，可视化发送文字/图片、查看 AI 返回。
 
 ## 七、目录文件说明
 
