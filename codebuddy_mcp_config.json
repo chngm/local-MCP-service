@@ -1,0 +1,9 @@
+{
+  "gm-data-bridge": {
+    "transport": "stdio",
+    "command": "python",
+    "args": ["python-projects/MCP-service/mcp_service.py", "--stdio"],
+    "disabled": false,
+    "description": "数据收发桥：其他程序通过 base_url+api_key 推送文本/图片，AI 通过工具读取"
+  }
+}

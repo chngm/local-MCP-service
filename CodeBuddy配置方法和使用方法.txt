@@ -1,0 +1,87 @@
+
+CodeBuddy配置方法
+
+已生成 codebuddy_mcp_config.json，复制以下内容到 CodeBuddy Settings → MCP → Add MCP
+
+{
+  "gm-data-bridge": {
+    "transport": "stdio",
+    "command": "python",
+    "args": ["<你的项目路径>/mcp_service.py", "--stdio"],
+    "disabled": false,
+    "description": "数据收发桥：其他程序通过 base_url+api_key 推送文本/图片，AI 通过工具读取"
+  }
+}
+
+实际内容：
+
+{
+  "mcpServers": {
+   
+  "gm-data-bridge": {
+    "transport": "stdio",
+    "command": "python",
+    "args": ["<你的项目路径>/mcp_service.py", "--stdio"],
+    "disabled": false,
+    "description": "数据收发桥：其他程序通过 base_url+api_key 推送文本/图片，AI 通过工具读取"
+  }
+
+
+  }
+}
+
+
+======
+
+工作流程（两种配合方式）
+
+方式一：AI 主动拉取（推荐，最可靠） 让 AI 调用 get_new_data 工具并传 wait_seconds: 15 —— 没有新数据时会等待，其他程序一推送数据，AI 立刻收到。
+
+方式二：服务主动推送 新数据到达时，服务会立即通过 stdio 发出 notifications/message 通知，CodeBuddy 会收到“收到新数据 #N”的提示。
+
+
+完整工作流
+
+1、双击 run.bat 启动服务（显示 base_url 和 api_key）；或直接由 CodeBuddy 通过上面的配置自动启动（--stdio 模式下会同时自动开启 HTTP 接收端口）
+2、其他程序 POST http://127.0.0.1:8765/receive（带 X-API-Key）推送文本/图片
+3、AI 在 Craft 模式说“看看有没有新数据”即可调用 get_new_data 读取
+
+base_url: http://127.0.0.1:8765
+api_key: dk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx（首次运行自动生成，见 config.json 或启动窗口输出）
+
+对AI说：
+循环调用 get_new_data（wait_seconds=15），循环100次
+
+
+
+
+
+==========
+
+
+文件	说明
+examples/client_example.py	Python 例程（仅标准库，3.7+）
+examples/ClientExample.java	Java 例程（仅 JDK 11+ 标准库，无第三方依赖）
+
+
+两个例程都封装了 4 个方法，可直接复制到你的项目里用：
+方法	功能
+send_text(text)	推送文本
+send_image(path)	推送图片（自动 base64）
+send_text_image(text, path)	图+文一次推送
+receive_results(after_id, wait_seconds)	接收 AI 返回结果（游标 + 长轮询）
+
+接口速查（例程内部用到的）
+code
+
+
+POST /receive          推送数据   {"text": "..."} / {"images":[...]} / 两者同发
+GET  /responses        接收 AI 结果  ?after_id=N&wait_seconds=0-60（游标长轮询）
+GET  /data             查询全部收到的数据
+GET  /health           健康检查
+（所有请求带请求头 X-API-Key）
+
+使用要点
+游标机制：程序里维护 after_id（上次读到的最大编号），每次 receive_results 后更新，就不会重复也不会漏
+长轮询：wait_seconds=10 表示没新结果时服务端等 10 秒再返回，比频繁轮询省事（外部程序可放心用 60 秒）
+AI 侧配合：AI 收到数据后必须调用 send_result 结果才会出现在 /responses 里

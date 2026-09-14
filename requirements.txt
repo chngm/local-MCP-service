@@ -1,0 +1,9 @@
+# MCP-service 依赖说明
+#
+# 本项目仅使用 Python 标准库，无需安装任何第三方依赖。
+# 以下列出的均为标准库模块，仅作记录用途。
+#
+# argparse, base64, json, os, secrets, sys, threading, time, uuid,
+# datetime, http.server, urllib.parse
+#
+# 环境要求: Python >= 3.7

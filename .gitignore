@@ -1,0 +1,19 @@
+# 密钥配置（首次运行会自动生成新 key）
+config.json
+
+# 运行时数据（含推送记录与图片，勿上传）
+messages.jsonl
+responses.jsonl
+read_state.json
+received_images/
+
+# Python
+__pycache__/
+*.pyc
+
+# IDE
+.idea/
+.vscode/
+
+# CodeBuddy 工作数据
+.codebuddy/
